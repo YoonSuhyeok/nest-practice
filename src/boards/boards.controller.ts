@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { Board, BoardStatus } from './boards.model';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from './multerOption';
 
 @Controller('boards')
 export class BoardsController {
@@ -37,4 +39,11 @@ export class BoardsController {
     ) {
         return this.boardsService.updateBoardStatus(id, status)
     }
+    
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file', multerOptions))
+    uploadFile(@UploadedFile() file: Express.Multer.File) {
+        console.log(file);
+    }
+
 }
